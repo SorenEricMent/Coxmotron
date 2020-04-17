@@ -1,0 +1,12 @@
+{
+    "manifest_version": 2,
+    "name": "Coxmotron",
+    "description": "Tieba Spammer by SorenEricMent",
+    "version": "0.0.1",
+    "permissions": [
+        "tabs",
+        "https://api.winsloweric.cn/",
+        "https://img.projectstardust.org/",
+        "https://tieba.baidu.com/",
+    ],
+}
