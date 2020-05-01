@@ -1,13 +1,14 @@
 #coxmotron-gui{
 		position:fixed;
 		width:300px;
-		height:300px;
+		height:auto;
 		border:1px solid gray;
 		top:28%;
 		right:1%;
 		padding:5px;
 		z-index:10;
-		background-color:white;
+		background-color:rgb(238,238,238);
+		border-radius:5px;
 }
 
 .guibutton{
@@ -15,6 +16,11 @@
 	position:relative;
 	margin:5px;
 	width:90%;
-	height:20px;
-	border:1px solid blue;
+	height:30px;
+	box-shadow:none;
+	border-radius:4px;
+}
+#guititle{
+	font-size:x-large;
+	margin:2px;
 }
