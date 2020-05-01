@@ -68,7 +68,8 @@ function getObfusedTitle() {
 }
 
 function getObfusedContent() {
-	contentMode = Math.floor(Math.random() * 5);
+	contentMode = Math.floor(Math.random() * 8);
+	console.log(contentMode);
 	if (contentMode == 0) {
 		var poemAuthorObfs = Math.floor(Math.random() * 3);
 		if (poemAuthorObfs == 0) {
@@ -83,14 +84,28 @@ function getObfusedContent() {
 		if (HSAuthorObfs == 0) {
 			return getHS();
 		} else if (HSAuthorObfs == 1) {
-			return getPoem().author + getHS();
+			return getPoem().author + ":" + getHS();
 		}
-	} else {
+	} else if (contentMode > 1 && contentMode < 4) {
 		var imageJSON = getImage();
 		imageJSON = imageJSON.urls[0].pic_id_encode;
 		imageDiv = "<img class='BDE_Image' data-isupload='1' src='https://tiebapic.baidu.com/forum/pic/item/" + imageJSON + ".jpg' unselectable='on' pic_type='0' width='400' height='400'>";
 		return imageDiv;
+	} else {
+		var videoObject = getVideo();
+		if (videoObject.no != 0) {
+			console.log(__ORIGIN__ + "不！无效视频请求！！启用恶臭缺省值！！！");
+			console.log(__ORIGIN__ + "哼，哼，哼，啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊！！！");
+			var videoHTMLObject = "<img unselectable='on' class='BDE_Flash' src='//tb2.bdstatic.com/tb/img/flash_335fbc8.png' data-video_url='https://www.bilibili.com/video/av114515' data-vsrc='https://www.bilibili.com/video/av114515' data-pkey='564dbe018a70bf84e64d1dc8ec8332ee' data-vpic='http://tiebapic.baidu.com/forum/pic/item/77094b36acaf2edde3335c839a1001e93801939d.jpg' title='http://static.hdslb.com/miniloader.swf?aid=114515&amp;page=1' width='219' height='175' data-width='500' data-height='450'>";
+		} else {
+			var videoURL = videoObject.data.html_url;
+			var videoSWF = videoObject.data.swf_url;
+			var videoIMG = videoObject.data.img_url;
+			var videoKEY = videoObject.data.pri_key;
+			var videoHTMLObject = "<img unselectable='on' class='BDE_Flash' src='//tb2.bdstatic.com/tb/img/flash_335fbc8.png' data-video_url='" + videoURL + "'data-vsrc='" + videoURL + "' data-pkey='" + videoKEY + "' data-vpic='" + videoIMG + "' title='" + videoSWF + "' width='219' height='175' data-width='500' data-height='450'>";
+		}
 	}
+	return videoHTMLObject;
 }
 
 function __initialization__() {
@@ -103,7 +118,7 @@ function __initialization__() {
 	});
 	mdui1.appendTo('body');
 	mdui2.appendTo('body');
-	controlTick = 7000;
+	controlTick = 8000;
 	TBElement_title = document.getElementsByClassName('editor_title ui_textfield')[0];
 	TBElement_content = document.getElementById('ueditor_replace');
 	TBElement_submit = document.getElementsByClassName('poster_submit')[0];
@@ -192,6 +207,37 @@ function getImage() {
 		return "Image transfer failure.";
 	}
 	return imageObject;
+}
+
+function getVideo() {
+	var randomVideoID = Math.floor(Math.random() * 99999999) + 1;
+	var bdVidAPI1 = $.ajax({
+		type : 'GET',
+		url : 'https://tieba.baidu.com/fex/check/isRealName',
+		async : false,
+		success : function(callback) {
+			vidAPI1Data = callback;
+		}
+	});
+	var bdVidAPI2 = $.ajax({
+		type : 'GET',
+		url : 'https://tieba.baidu.com/video/pc/getBaseInfo',
+		async : false,
+		success : function(callback) {
+			vidAPI2Data = callback;
+		}
+	});
+	var uploadVideoData = $.ajax({
+		type : 'POST',
+		url : 'https://tieba.baidu.com/f/commit/commonapi/getVideoInfoApi',
+		data : 'url=https%3A%2F%2Fwww.bilibili.com%2Fvideo%2Fav' + randomVideoID+ '&type=0',
+		async : false,
+		success : function(callback) {
+			receivedVideoInfo = callback;
+		}
+	});
+	videoInfoJSON = JSON.parse(receivedVideoInfo);
+	return videoInfoJSON;
 }
 
 function startMainLoop() {
